@@ -19,7 +19,7 @@ const FormField = ({
       <Text className="font-pmedium text-xs text-gray-500">{title}</Text>
       <View className="rounded-full bg-[#E1E8ED] focus:border-blue h-[50px] w-full p-4">
         <TextInput
-          className="flex-1 font-pmeduim  text-black text-[14px] h-[70px] w-full"
+          className="flex-1 font-pmeduim  text-black text-[15px] h-[70px] w-full"
           value={value}
           onChangeText={handleChangeText}
           secureTextEntry={title === "Enter password"}

@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  username     String
+  email        String    @unique
+  clerkId      String    @unique
+  bio          String?
+  profileImage String?
+  JoinedAt     DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
+
+  Post Post[]
+
+  roomIds String[] @db.ObjectId
+  rooms   Room[]   @relation(fields: [roomIds], references: [id])
+
+  seenMessageIds String[]  @db.ObjectId
+  seenMessage    Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
+  messages       Message[]
+  Comment        Comment[]
+}
+
+model Post {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  image     String?
+  userId    String    @db.ObjectId
+  tag       String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment Comment[]
+}
+
+model Comment {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  comment   String
+  image     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  Post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String? @db.ObjectId
+
+  userId String? @db.ObjectId
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Room {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  userIds        String[]  @db.ObjectId
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime? @updatedAt
+  lastMessagesAt DateTime  @default(now())
+
+  users      User[]    @relation(fields: [userIds], references: [id])
+  messageIds String[]  @db.ObjectId
+  messages   Message[]
+}
+
+model Message {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  roomId    String    @db.ObjectId
+  message   String
+  image     String?
+  seenIds   String[]  @db.ObjectId
+  senderId  String    @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  room   Room   @relation(fields: [roomId], references: [id])
+  seen   User[] @relation("Seen", fields: [seenIds], references: [id])
+  sender User   @relation(fields: [senderId], references: [id])
+}

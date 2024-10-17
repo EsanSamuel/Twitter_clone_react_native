@@ -7,6 +7,7 @@ import { router } from "expo-router";
 import { useSignUp } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import ReactNativeModal from "react-native-modal";
+import axios from "axios";
 
 const SignUp = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -50,8 +51,19 @@ const SignUp = () => {
       });
 
       if (completeSignUp.status === "complete") {
-        await setActive({ session: completeSignUp.createdSessionId });
-        router.replace("/home");
+        try {
+          await axios.post("http://192.168.43.200:3000/auth/register", {
+            username: form.username,
+            email: form.email,
+            clerkId: completeSignUp.createdUserId,
+          });
+
+          await setActive({ session: completeSignUp.createdSessionId });
+
+          router.replace("/home");
+        } catch (error) {
+          console.error(error);
+        }
       } else {
         console.error(JSON.stringify(completeSignUp, null, 2));
       }
