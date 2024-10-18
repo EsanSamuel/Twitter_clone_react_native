@@ -42,7 +42,7 @@ const CreatePost = () => {
   }, [userId]);
 
   const createPost = async () => {
-    let base64Image = null;
+    let base64Image = "";
 
     if (form.image) {
       try {

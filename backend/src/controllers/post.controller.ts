@@ -24,12 +24,16 @@ export const createPost = async (
       },
     });
 
-    const ImageUrl = await cloudinary.uploader.upload(image);
+    let ImageUrl = null;
+    if (image && image !== "") {
+      const uploadResult = await cloudinary.uploader.upload(image);
+      ImageUrl = uploadResult.url;
+    }
     const post = await prisma.post.create({
       data: {
         userId: user.id,
         content,
-        image: ImageUrl.url,
+        image: ImageUrl,
         tag,
       },
     });
@@ -69,7 +73,29 @@ export const getPostById = async (
         user: true,
       },
     });
-    console.log(post)
+    console.log(post);
+    res.status(200).json(post);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error fetching Posts");
+  }
+};
+
+export const getUserPost = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const userId = req.params.id;
+    const post = await prisma.post.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        user: true,
+      },
+    });
+    console.log(post);
     res.status(200).json(post);
   } catch (error) {
     console.log(error);

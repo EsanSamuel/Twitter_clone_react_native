@@ -56,7 +56,7 @@ const PostCard = ({ item }: PostProps) => {
           </Text>
         )}
 
-        {item.image !== "" && (
+        {item.image !== null && item.image !== "" && (
           <View className=" pt-5">
             <Image
               source={{ uri: item.image! }}

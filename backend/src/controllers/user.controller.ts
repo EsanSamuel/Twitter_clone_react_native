@@ -63,14 +63,18 @@ export const updateUser = async (
     const validate = validateUpdate.parse(req.body);
     const { username, bio, profileImage }: updateUserType = validate;
     console.log("RequestBody:", req.body);
-    const ImageUrl = await cloudinary.uploader.upload(profileImage);
+    let ImageUrl = null;
+    if (profileImage && profileImage !== "") {
+      const uploadResult = await cloudinary.uploader.upload(profileImage);
+      ImageUrl = uploadResult.url;
+    }
     const userUpdate = await prisma.user.update({
       where: {
         clerkId: id,
       },
       data: {
         username,
-        profileImage: ImageUrl.url,
+        profileImage: ImageUrl,
         bio,
       },
     });

@@ -8,9 +8,9 @@ import {
   Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { ScrollView } from "react-native";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Feather, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import PostCard from "@/components/PostCard";
 import axios from "axios";
 import * as DocumentPicker from "expo-document-picker";
@@ -20,6 +20,7 @@ import {
 } from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { useAuth } from "@clerk/clerk-expo";
+import { Image } from "react-native";
 
 const Comment = () => {
   const [post, setPost] = useState<any>("");
@@ -104,19 +105,67 @@ const Comment = () => {
       <FlatList
         data={comments}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={{
-          paddingTop: 10,
-          borderBottomColor: "#6B7280",
-          height: "auto",
-        }}
+        contentContainerStyle={{}}
         //ItemSeparatorComponent={() => <View className="h-3" />}
         renderItem={({ item }) => (
-          <View className="">
-            <Text>11{item.comment}</Text>
+          <View
+            className={`w-full h-auto border-b-[1px] ${
+              item.id === 0 ? "border-t-[1px] border-gray-300" : ""
+            }  rounded-lg border-gray-300 px-5 py-3 flex flex-col`}
+          >
+            <View className="justify-between w-full flex-row">
+              <View className="flex  flex-row gap-2">
+                <View className="flex flex-col items-center h-full">
+                  {item.user.profileImage ? (
+                    <Image
+                      source={{ uri: item.user.profileImage! }}
+                      className="w-10 h-10 rounded-full border-[1px] border-[#6B7280]"
+                    />
+                  ) : (
+                    <Image
+                      source={require("../../assets/images/placeholder.png")}
+                      className="w-10 h-10 rounded-full border-[1px] border-[#6B7280]"
+                    />
+                  )}
+                </View>
+ 
+                <View className="flex flex-row">
+                  <Text className="text-gray-500 font-pbold text-[13px]">
+                    {item.user.username}
+                  </Text>
+                  <Text className="text-gray-400 font-pbold text-[11px] pl-1">
+                    @{item.user.username.toLowerCase()}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View className="pl-10 ml-2 -mt-4" style={{ paddingTop: -10 }}>
+              <Text className=" text-gray-500 font-psemibold text-[13px]">
+                {item.comment}
+              </Text>
+
+              {item.image !== null && (
+                <View className=" pt-5">
+                  <Image
+                    source={{ uri: item.image! }}
+                    className="w-full min-h-[200px] max-h-[300px] rounded-lg object-contain"
+                  />
+                </View>
+              )}
+
+              <Link href={`/comment/${item.id}`}>
+                <View className="flex gap-1 flex-row items-center">
+                  <FontAwesome5 name="comment" size={18} color="#9ca3af" />
+                  <Text className="text-gray-400 font-pmedium text-[12px]">
+                    12
+                  </Text>
+                </View>
+              </Link>
+            </View>
           </View>
         )}
         ListHeaderComponent={() => (
-          <View className=" w-full h-full">
+          <View className=" w-full">
             <View className="w-full flex flex-row  items-center">
               <TouchableOpacity
                 onPress={() => router.push("/home")}
@@ -138,7 +187,7 @@ const Comment = () => {
               Post
             </Text>
             {post && <PostCard item={post} />}
-            <View className="px-3 z-10 mt-2">
+            <View className="px-3  mt-2">
               <View className="px-3 bg-[#E1E8ED] rounded-full h-[50px] flex-row items-center">
                 <TouchableOpacity
                   className="w-auto h-auto text-center rounded-full  text-white"

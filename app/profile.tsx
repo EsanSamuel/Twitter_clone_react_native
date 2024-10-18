@@ -1,7 +1,6 @@
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { posts } from "@/libs/dummyData";
 import PostCard from "@/components/PostCard";
 import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -25,6 +24,7 @@ const Profile = () => {
     bio: "",
     profileImage: null,
   });
+  const [posts, setPosts] = useState<any>([]);
   const [user, setUser] = useState<any>("");
   const { userId } = useAuth();
   useEffect(() => {
@@ -72,6 +72,17 @@ const Profile = () => {
       setForm({ ...form, profileImage: result.assets[0] });
     }
   };
+
+  useEffect(() => {
+    const getUserPost = async () => {
+      const response = await axios.get(
+        `http://192.168.43.200:3000/userpost/${user.id}`
+      );
+      setPosts(response.data);
+    };
+    getUserPost();
+  }, [user.id]);
+
   return (
     <SafeAreaView>
       <FlatList
@@ -113,7 +124,7 @@ const Profile = () => {
               <Text className="font-pbold text-2xl text-gray-600">
                 {user.username}
               </Text>
-              
+
               <Text className="font-pmedium text-[13px] text-gray-600">
                 {user.bio}
               </Text>

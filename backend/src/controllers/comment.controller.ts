@@ -18,12 +18,16 @@ export const createComment = async (
     const { post_id, comment, image, user_id }: createCommentType = validate;
     console.log("RequestBody:", req.body);
 
-    const ImageUrl = await cloudinary.uploader.upload(image);
+    let ImageUrl = null;
+    if (image && image !== "") {
+      const uploadResult = await cloudinary.uploader.upload(image);
+      ImageUrl = uploadResult.url;
+    }
     const createComment = await prisma.comment.create({
       data: {
         postId: post_id,
         comment,
-        image: ImageUrl.url,
+        image: ImageUrl,
         userId: user_id,
       },
     });
