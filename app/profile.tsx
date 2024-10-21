@@ -19,13 +19,13 @@ import { Alert } from "react-native";
 
 const Profile = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [form, setForm] = useState({
-    username: "",
-    bio: "",
-    profileImage: null,
-  });
   const [posts, setPosts] = useState<any>([]);
   const [user, setUser] = useState<any>("");
+  const [form, setForm] = useState({
+    username: user.username,
+    bio: user.bio,
+    profileImage: user.profileImage,
+  });
   const { userId } = useAuth();
   useEffect(() => {
     const getUserId = async () => {
@@ -36,6 +36,7 @@ const Profile = () => {
     };
     getUserId();
   }, [userId]);
+
 
   const updateUser = async () => {
     let base64Image = null;
@@ -84,7 +85,7 @@ const Profile = () => {
   }, [user.id]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="bg-white min-h-[100%]">
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}
@@ -172,11 +173,11 @@ const Profile = () => {
             </View>
           )}
           <TouchableOpacity
-            className="w-full text-center  bg-blue rounded-full p-3 text-white mt-5"
+            className="w-full text-center  text-blue bg-white border-blue border-[1px] rounded-full px-3 py-2 mt-5"
             activeOpacity={0.7}
             onPress={openPicker}
           >
-            <Text className="text-white text-center font-psemibold">
+            <Text className="text-blue text-center font-psemibold">
               Select Image
             </Text>
           </TouchableOpacity>

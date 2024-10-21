@@ -75,7 +75,7 @@ const CreatePost = () => {
     }
   };
   return (
-    <SafeAreaView className="w-full p-3">
+    <SafeAreaView className="w-full p-3 bg-white min-h-[100%]">
       <ScrollView contentContainerStyle={{ height: "100%" }}>
         <View className="flex flex-row justify-between items-center w-full">
           <Link href="/home">
@@ -90,7 +90,7 @@ const CreatePost = () => {
         </View>
         <View className="flex flex-row justify-between  gap-2 w-full pt-7">
           <Image
-            source={require("../../assets/images/placeholder.png")}
+            source={{ uri: user.profileImage }}
             className="w-8 h-8 rounded-full border-[1px] border-gray-400"
             style={{
               position: "absolute",

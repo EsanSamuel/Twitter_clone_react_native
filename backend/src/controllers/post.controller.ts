@@ -51,6 +51,9 @@ export const getPosts = async (req: express.Request, res: express.Response) => {
       include: {
         user: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     res.status(200).json(posts);
   } catch (error) {
@@ -97,6 +100,47 @@ export const getUserPost = async (
     });
     console.log(post);
     res.status(200).json(post);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error fetching Posts");
+  }
+};
+
+export const updatePost = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const id = req.params.id;
+    const { content } = req.body;
+    const post = await prisma.post.update({
+      where: {
+        id: id,
+      },
+      data: {
+        content,
+      },
+    });
+    console.log(post);
+    res.status(200).json(post);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error fetching Posts");
+  }
+};
+
+export const deletePost = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const id = req.params.id;
+    const deletepost = await prisma.post.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.status(200).json(deletepost);
   } catch (error) {
     console.log(error);
     res.status(500).send("Error fetching Posts");

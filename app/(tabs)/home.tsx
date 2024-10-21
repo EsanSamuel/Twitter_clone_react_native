@@ -35,7 +35,7 @@ const home = () => {
   }, [userId]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="bg-white min-h-[100%]">
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}
@@ -57,7 +57,7 @@ const home = () => {
                 />
               </TouchableOpacity>
             </View>
-            <Text className="font-pbold pt-5 text-2xl text-gray-600 pb-5">
+            <Text className="font-pbold pt-5 text-2xl text-gray-600 pb-2">
               See what's new!
             </Text>
           </View>

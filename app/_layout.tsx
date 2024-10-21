@@ -58,6 +58,7 @@ export default function RootLayout() {
             <Stack.Screen name="comment/[query]" options={{ headerShown: false }} />
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="profile" options={{ headerShown: false }} />
+            <Stack.Screen name="user-profile/[query]" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
           </Stack>
         </ThemeProvider>

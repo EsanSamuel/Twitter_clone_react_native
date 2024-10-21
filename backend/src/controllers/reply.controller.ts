@@ -1,6 +1,9 @@
 import express from "express";
 import prisma from "../libs/prismadb";
-import { createCommentType, validateComment } from "../libs/validation";
+import {
+  createReplyType,
+  validateReply,
+} from "../libs/validation";
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
@@ -9,13 +12,13 @@ cloudinary.config({
   api_secret: "LBf0Bay00WC4w1bonkdeapChUO4",
 });
 
-export const createComment = async (
+export const createReply = async (
   req: express.Request,
   res: express.Response
 ) => {
   try {
-    const validate = validateComment.parse(req.body);
-    const { post_id, comment, image, user_id }: createCommentType = validate;
+    const validate = validateReply.parse(req.body);
+    const { comment_id, reply, image, user_id }: createReplyType = validate;
     console.log("RequestBody:", req.body);
 
     let ImageUrl = null;
@@ -23,39 +26,36 @@ export const createComment = async (
       const uploadResult = await cloudinary.uploader.upload(image);
       ImageUrl = uploadResult.url;
     }
-    const createComment = await prisma.comment.create({
+    const createreply = await prisma.reply.create({
       data: {
-        postId: post_id,
-        comment,
+        commentId: comment_id,
+        reply,
         image: ImageUrl,
         userId: user_id,
       },
     });
-    console.log(createComment);
-    res.status(201).json(createComment);
+    console.log(createreply);
+    res.status(201).json(createreply);
   } catch (error) {
     console.log(error);
     res.status(500).send("Error creating comment!");
   }
 };
 
-export const getComments = async (
-  req: express.Request,
-  res: express.Response
-) => {
+export const getReply = async (req: express.Request, res: express.Response) => {
   try {
     const id = req.params.id;
-    const comments = await prisma.comment.findMany({
+    const replies = await prisma.reply.findMany({
       where: {
-        postId: id,
+        commentId: id,
       },
       include: {
-        Post: true,
+        comment: true,
         user: true,
       },
     });
-    console.log(comments);
-    res.status(200).json(comments);
+    console.log(replies);
+    res.status(200).json(replies);
   } catch (error) {
     console.log(error);
     res.status(500).send("Error fetching Posts");

@@ -7,13 +7,14 @@ import bodyParser from "body-parser";
 import user from "./routes/user.route";
 import post from "./routes/post.route";
 import comment from "./routes/comment.route";
+import reply from "./routes/reply.route";
 
 const app = express();
 app.use(
   cors({
     credentials: true,
   })
-)
+);
 app.use(
   cors({
     origin: "http://localhost:8081", // replace with your frontend origin
@@ -33,6 +34,7 @@ app.use(express.json());
 app.use("/", user);
 app.use("/", post);
 app.use("/", comment);
+app.use("/", reply);
 
 app.get("/", (req: express.Request, res: express.Response) => {
   res.send("Server is running!");

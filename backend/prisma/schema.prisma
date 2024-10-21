@@ -32,6 +32,7 @@ model User {
   seenMessage    Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
   messages       Message[]
   Comment        Comment[]
+  Reply          Reply[]
 }
 
 model Post {
@@ -56,6 +57,21 @@ model Comment {
 
   Post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String? @db.ObjectId
+
+  userId String? @db.ObjectId
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Reply  Reply[]
+}
+
+model Reply {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  reply     String
+  image     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String?  @db.ObjectId
 
   userId String? @db.ObjectId
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
