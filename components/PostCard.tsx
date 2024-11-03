@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Feather from "@expo/vector-icons/Feather";
@@ -13,6 +13,7 @@ import axios from "axios";
 import ReactNativeModal from "react-native-modal";
 import Octicons from "@expo/vector-icons/Octicons";
 import FormField from "./FormField";
+import { UserContext } from "@/context/UserProvider";
 
 interface PostProps {
   item: Record<string, any>;
@@ -26,6 +27,7 @@ const PostCard = ({ item }: PostProps) => {
   const [form, setForm] = useState({
     content: item.content,
   });
+  const { user } = useContext(UserContext);
   const routetoProfile = () => {
     if (item.user.clerkId === userId) {
       router.push("/profile");
@@ -51,6 +53,17 @@ const PostCard = ({ item }: PostProps) => {
 
   const handleDelete = () => {
     axios.delete(`http://192.168.43.200:3000/post/${item.id}`);
+  };
+
+  const handleLike = () => {
+    try {
+      axios.post("http://192.168.43.200:3000/like", {
+        userId: user.id,
+        postId: item.id,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <View
@@ -111,10 +124,13 @@ const PostCard = ({ item }: PostProps) => {
         )}
 
         <View className="flex gap-4 pt-2 flex-row">
-          <View className="flex gap-1 flex-row items-center">
+          <TouchableOpacity
+            className="flex gap-1 flex-row items-center"
+            onPress={handleLike}
+          >
             <Feather name="heart" size={18} color="#6b7280" />
             <Text className="text-gray-500 font-pmedium text-[12px]">120</Text>
-          </View>
+          </TouchableOpacity>
 
           <Link href={`/comment/${item.id}`}>
             <View className="flex gap-1 flex-row items-center">
@@ -145,8 +161,8 @@ const PostCard = ({ item }: PostProps) => {
             <Octicons name="dash" size={50} color="#4b5563" />
           </View>
           <View className="flex-col gap-3">
-            <TouchableOpacity className="bg-[#f5f5f5] py-3 rounded-lg">
-              <Text className="font-pregular text-gray-600 text-center">
+            <TouchableOpacity className="bg-[#f5f5f5] py-3 px-3 rounded-lg">
+              <Text className="font-pregular text-gray-600 text-start">
                 Save
               </Text>
             </TouchableOpacity>
@@ -155,7 +171,7 @@ const PostCard = ({ item }: PostProps) => {
                 className="bg-[#f5f5f5] py-3 rounded-lg"
                 onPress={() => setEditModal(true)}
               >
-                <Text className="font-pregular text-gray-600 text-center">
+                <Text className="font-pregular px-3 text-gray-600 text-start">
                   Edit
                 </Text>
               </TouchableOpacity>
@@ -165,7 +181,7 @@ const PostCard = ({ item }: PostProps) => {
                 className="bg-[#f5f5f5] py-3 rounded-lg"
                 onPress={handleDelete}
               >
-                <Text className="font-pregular text-[#FF4C4C] text-center">
+                <Text className="font-pregular px-3 text-[#FF4C4C] text-start">
                   Delete
                 </Text>
               </TouchableOpacity>

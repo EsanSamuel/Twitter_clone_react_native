@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -10,11 +10,16 @@ import PostCard from "@/components/PostCard";
 //import { posts } from "@/libs/dummyData";
 import axios from "axios";
 import { useAuth } from "@clerk/clerk-expo";
+import { UserContext } from "@/context/UserProvider";
 
 const home = () => {
   const [posts, setPosts] = useState([]);
   const { userId } = useAuth();
-  const [user, setUser] = useState<any>("");
+  // const [user, setUser] = useState<any>("");
+  //const [firstName, setFirstName] = useState<string>("");
+  //const [lastName, setLastName] = useState<string>("");
+
+  const { user, firstName, lastName } = useContext(UserContext);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -24,15 +29,24 @@ const home = () => {
     getPosts();
   }, []);
 
-  useEffect(() => {
+  /*useEffect(() => {
     const getUserId = async () => {
       const response = await axios.get(
         `http://192.168.43.200:3000/user/${userId}`
       );
       setUser(response.data);
+      const username = response.data.username;
+      if (username.includes(" ")) {
+        const [firstname, lastname] = username.split(" ");
+        setFirstName(firstname);
+        setLastName(lastname);
+      } else {
+        setFirstName(username);
+        setLastName("");
+      }
     };
     getUserId();
-  }, [userId]);
+  }, [userId]);*/
 
   return (
     <SafeAreaView className="bg-white min-h-[100%]">
@@ -42,6 +56,13 @@ const home = () => {
         contentContainerStyle={{ paddingTop: 0, borderBottomColor: "#6B7280" }}
         //ItemSeparatorComponent={() => <View className="h-3" />}
         renderItem={({ item }) => <PostCard item={item} />}
+        ListEmptyComponent={() => (
+          <View className="mt-20 p-5">
+            <Text className="text-[20px] text-gray-500 font-pbold">
+              {firstName}, There are no posts yet!
+            </Text>
+          </View>
+        )}
         ListHeaderComponent={() => (
           <View className="p-3 w-full">
             <View className="w-full flex flex-row justify-between items-center">

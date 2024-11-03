@@ -238,6 +238,17 @@ const CommentCard = ({ item, commentLength }: CommentProps) => {
             </TouchableOpacity>
           </View>
         </View>
+        {form.image && (
+          <Image
+            source={{ uri: form.image.uri }}
+            className="w-[100px] h-[70px] rounded-lg"
+            style={{
+              position: "absolute",
+              bottom: 3,
+              left: 2,
+            }}
+          />
+        )}
       </ReactNativeModal>
       {showReplies && (
         <View>

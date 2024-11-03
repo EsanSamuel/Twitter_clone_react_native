@@ -8,6 +8,7 @@ import user from "./routes/user.route";
 import post from "./routes/post.route";
 import comment from "./routes/comment.route";
 import reply from "./routes/reply.route";
+import like from "./routes/like.route";
 
 const app = express();
 app.use(
@@ -35,6 +36,7 @@ app.use("/", user);
 app.use("/", post);
 app.use("/", comment);
 app.use("/", reply);
+app.use("/", like);
 
 app.get("/", (req: express.Request, res: express.Response) => {
   res.send("Server is running!");

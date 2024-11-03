@@ -55,7 +55,8 @@ const Comment = () => {
     getPost();
   }, [query]);
 
-  const createComment = async () => {
+  const createComment = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
       let base64Image = null;
 

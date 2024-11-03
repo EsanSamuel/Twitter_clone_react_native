@@ -1,9 +1,6 @@
 import express from "express";
 import prisma from "../libs/prismadb";
-import {
-  createReplyType,
-  validateReply,
-} from "../libs/validation";
+import { createReplyType, validateReply } from "../libs/validation";
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
@@ -28,10 +25,18 @@ export const createReply = async (
     }
     const createreply = await prisma.reply.create({
       data: {
-        commentId: comment_id,
+        comment: {
+          connect: {
+            id: comment_id,
+          },
+        },
         reply,
         image: ImageUrl,
-        userId: user_id,
+        user: {
+          connect: {
+            id: user_id,
+          },
+        },
       },
     });
     console.log(createreply);

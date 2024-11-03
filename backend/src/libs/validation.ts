@@ -28,7 +28,7 @@ export type updateUserType = z.infer<typeof validateUpdate>;
 export const validateComment = z.object({
   post_id: z.string().min(1),
   user_id: z.string().min(1),
-  comment: z.string().min(1),
+  comment: z.string().optional(),
   image: z.string().nullable().optional(),
 });
 
@@ -37,7 +37,7 @@ export type createCommentType = z.infer<typeof validateComment>;
 export const validateReply = z.object({
   comment_id: z.string().min(1),
   user_id: z.string().min(1),
-  reply: z.string().min(1),
+  reply: z.string().optional(),
   image: z.string().nullable().optional(),
 });
 

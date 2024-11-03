@@ -31,7 +31,11 @@ export const createPost = async (
     }
     const post = await prisma.post.create({
       data: {
-        userId: user.id,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
         content,
         image: ImageUrl,
         tag,
