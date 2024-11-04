@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Feather from "@expo/vector-icons/Feather";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { Image } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
@@ -19,6 +19,12 @@ interface PostProps {
   item: Record<string, any>;
 }
 
+interface LikeProps {
+  user: {
+    id: string;
+  };
+}
+
 const PostCard = ({ item }: PostProps) => {
   const { userId } = useAuth();
   const [comments, setComments] = useState<any>([]);
@@ -27,6 +33,7 @@ const PostCard = ({ item }: PostProps) => {
   const [form, setForm] = useState({
     content: item.content,
   });
+  const [likes, setLikes] = useState([]);
   const { user } = useContext(UserContext);
   const routetoProfile = () => {
     if (item.user.clerkId === userId) {
@@ -55,6 +62,21 @@ const PostCard = ({ item }: PostProps) => {
     axios.delete(`http://192.168.43.200:3000/post/${item.id}`);
   };
 
+  useEffect(() => {
+    const getLikes = async () => {
+      const response = await axios.get(
+        `http://192.168.43.200:3000/like/${item.id}`
+      );
+      setLikes(response.data);
+    };
+    getLikes();
+  }, [item]);
+
+  const hasLiked = useMemo(() => {
+    const userLikes = likes.map((like: LikeProps) => like?.user.id);
+    return userLikes.includes(user.id);
+  }, [user.id, likes]);
+
   const handleLike = () => {
     try {
       axios.post("http://192.168.43.200:3000/like", {
@@ -65,6 +87,15 @@ const PostCard = ({ item }: PostProps) => {
       console.log(error);
     }
   };
+
+  const handleUnLike = () => {
+    try {
+      axios.delete(`http://192.168.43.200:3000/like/${user.id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View
       className={`w-full h-auto border-t-[1px] ${
@@ -124,13 +155,27 @@ const PostCard = ({ item }: PostProps) => {
         )}
 
         <View className="flex gap-4 pt-2 flex-row">
-          <TouchableOpacity
-            className="flex gap-1 flex-row items-center"
-            onPress={handleLike}
-          >
-            <Feather name="heart" size={18} color="#6b7280" />
-            <Text className="text-gray-500 font-pmedium text-[12px]">120</Text>
-          </TouchableOpacity>
+          {!hasLiked ? (
+            <TouchableOpacity
+              className="flex gap-1 flex-row items-center"
+              onPress={handleLike}
+            >
+              <Feather name="heart" size={18} color="#6b7280" />
+              <Text className="text-gray-500 font-pmedium text-[12px]">
+                {likes.length}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              className="flex gap-1 flex-row items-center"
+              onPress={handleUnLike}
+            >
+              <Ionicons name="heart" size={18} color="#ef4444" />
+              <Text className="text-gray-500 font-pmedium text-[12px]">
+                {likes.length}
+              </Text>
+            </TouchableOpacity>
+          )}
 
           <Link href={`/comment/${item.id}`}>
             <View className="flex gap-1 flex-row items-center">

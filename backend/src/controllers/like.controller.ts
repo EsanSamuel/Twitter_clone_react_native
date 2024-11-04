@@ -36,9 +36,39 @@ export const getLike = async (req: express.Request, res: express.Response) => {
       where: {
         postId: id,
       },
+      include: {
+        user: true,
+        post: true,
+      },
     });
     console.log(likes);
     res.status(201).json(likes);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error fetching likes!");
+  }
+};
+
+export const unLike = async (req: express.Request, res: express.Response) => {
+  try {
+    const id = req.params.id;
+    const likeToDelete = await prisma.like.findFirst({
+      where: {
+        userId: id,
+      },
+    });
+
+    if (!likeToDelete) {
+      res.status(404).send("Like not found!");
+    }
+
+    const deleteLike = await prisma.like.delete({
+      where: {
+        id: likeToDelete.id,
+      },
+    });
+    console.log("Post unliked successfully!", deleteLike);
+    res.json({ message: "Post unliked successfully!", deleteLike });
   } catch (error) {
     console.log(error);
     res.status(500).send("Error fetching likes!");
