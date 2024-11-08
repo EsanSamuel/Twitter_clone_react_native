@@ -52,21 +52,16 @@ export const getLike = async (req: express.Request, res: express.Response) => {
 export const unLike = async (req: express.Request, res: express.Response) => {
   try {
     const id = req.params.id;
-    const likeToDelete = await prisma.like.findFirst({
-      where: {
-        userId: id,
-      },
-    });
-
-    if (!likeToDelete) {
-      res.status(404).send("Like not found!");
-    }
-
+    const { post_id } = req.body;
     const deleteLike = await prisma.like.delete({
       where: {
-        id: likeToDelete.id,
+        postId_userId: {
+          postId: post_id,
+          userId: id,
+        },
       },
     });
+
     console.log("Post unliked successfully!", deleteLike);
     res.json({ message: "Post unliked successfully!", deleteLike });
   } catch (error) {

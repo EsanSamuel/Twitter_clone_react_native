@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PostCard from "@/components/PostCard";
 import { AntDesign, Feather, FontAwesome6 } from "@expo/vector-icons";
@@ -16,6 +16,7 @@ import {
 } from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { Alert } from "react-native";
+import { UserContext } from "@/context/UserProvider";
 
 const Profile = () => {
   const { query } = useLocalSearchParams();
@@ -23,6 +24,7 @@ const Profile = () => {
   const [posts, setPosts] = useState<any>([]);
   const [user, setUser] = useState<any>("");
   const { userId } = useAuth();
+  const { user: loggedInUser } = useContext(UserContext);
   useEffect(() => {
     const getUserId = async () => {
       const response = await axios.get(
@@ -42,6 +44,18 @@ const Profile = () => {
     };
     getUserPost();
   }, [user.id]);
+
+  const handleChat = async () => {
+    try {
+      const response = await axios.post("http://192.168.43.200:3000/chat", {
+        userId: loggedInUser.id,
+        otherUserId: user.id,
+      });
+      console.log(response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -92,6 +106,7 @@ const Profile = () => {
                 <TouchableOpacity
                   className="w-full  border-[1px] border-blue rounded-full p-2 px-4
                  text-blue flex-row  justify-center items-center"
+                 onPress={handleChat}
                 >
                   <Feather name="mail" size={24} color="#1da1f2" />
                   <Text className="text-blue text-center text-[13px] font-psemibold ml-4">

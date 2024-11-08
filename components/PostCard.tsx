@@ -90,7 +90,9 @@ const PostCard = ({ item }: PostProps) => {
 
   const handleUnLike = () => {
     try {
-      axios.delete(`http://192.168.43.200:3000/like/${user.id}`);
+      axios.delete(`http://192.168.43.200:3000/like/${user.id}`, {
+        data: { post_id: item.id },
+      });
     } catch (error) {
       console.log(error);
     }
@@ -126,7 +128,7 @@ const PostCard = ({ item }: PostProps) => {
               {item.user.username}
             </Text>
 
-            <Text className="text-gray-400 font-pmedium text-[11px] pl-2 pt-0.5">
+            <Text className="text-gray-400 font-pmedium text-[11px] pl-1 pt-0.5">
               {formatDistanceToNowStrict(new Date(item.createdAt))}
             </Text>
           </View>
@@ -146,10 +148,10 @@ const PostCard = ({ item }: PostProps) => {
         )}
 
         {item.image !== null && item.image !== "" && (
-          <View className=" pt-5">
+          <View className=" pt-5 h-auto">
             <Image
               source={{ uri: item.image! }}
-              className="w-full min-h-[200px] max-h-[500px] rounded-lg object-contain"
+              className="w-full min-h-[200px]  rounded-lg object-contain"
             />
           </View>
         )}
