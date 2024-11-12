@@ -23,7 +23,7 @@ const home = () => {
 
   useEffect(() => {
     const getPosts = async () => {
-      const response = await axios.get("http://192.168.43.200:3000/post");
+      const response = await axios.get("http://192.168.43.199:3000/post");
       setPosts(response.data);
     };
     getPosts();
@@ -73,7 +73,7 @@ const home = () => {
                 activeOpacity={0.7}
               >
                 <Image
-                  source={{ uri: user.profileImage! }}
+                  source={{ uri: user.profileImage }}
                   className="w-7 h-7 rounded-full border-[1px] border-gray-400"
                 />
               </TouchableOpacity>

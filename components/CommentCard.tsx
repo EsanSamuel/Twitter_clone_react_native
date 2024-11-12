@@ -41,7 +41,7 @@ const CommentCard = ({ item, commentLength }: CommentProps) => {
   useEffect(() => {
     const getUserId = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/user/${userId}`
+        `http://192.168.43.199:3000/user/${userId}`
       );
       setUser(response.data);
     };
@@ -74,7 +74,7 @@ const CommentCard = ({ item, commentLength }: CommentProps) => {
         return;
       }
     }
-    await axios.post("http://192.168.43.200:3000/reply", {
+    await axios.post("http://192.168.43.199:3000/reply", {
       user_id: user.id,
       reply: form.reply,
       image: base64Image,
@@ -85,7 +85,7 @@ const CommentCard = ({ item, commentLength }: CommentProps) => {
   useEffect(() => {
     const getReplies = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/reply/${item.id}`
+        `http://192.168.43.199:3000/reply/${item.id}`
       );
       setReplies(response.data);
     };

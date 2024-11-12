@@ -42,7 +42,9 @@ export const getAllUsers = async (
   res: express.Response
 ) => {
   try {
+    const userId = req.params.id;
     const users = await prisma.user.findMany({
+  
       include: {
         Post: true,
       },

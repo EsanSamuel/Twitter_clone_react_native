@@ -8,8 +8,6 @@ import { TextInput } from "react-native";
 import { Image, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-
-
 const Search = () => {
   const { userId } = useAuth();
   const [user, setUser] = useState<any>("");
@@ -17,7 +15,7 @@ const Search = () => {
   useEffect(() => {
     const getUserId = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/user/${userId}`
+        `http://192.168.43.199:3000/user/${userId}`
       );
       setUser(response.data);
     };
@@ -26,14 +24,15 @@ const Search = () => {
 
   useEffect(() => {
     const getUserId = async () => {
-      const response = await axios.get(`http://192.168.43.200:3000/user`);
+      const response = await axios.get(
+        `http://192.168.43.199:3000/allusers/${user.id}`
+      );
       setUsers(response.data);
     };
     getUserId();
   }, []);
-  const routetoProfile = () => {
-    router.push(`/user-profile/${user.clerkId}`);
-    
+  const routetoProfile = (user: string) => {
+    router.push(`/user-profile/${user}`);
   };
   return (
     <SafeAreaView className="bg-white min-h-[100%]">
@@ -57,7 +56,9 @@ const Search = () => {
           </TouchableOpacity>
         </View>
         <View className="">
-          <Text className="p-2 font-pbold text-[16px] text-gray-600">Users</Text>
+          <Text className="p-2 font-pbold text-[16px] text-gray-600">
+            Users
+          </Text>
           <View className="flex-col">
             {users.map((user) => (
               <View className="border-gray-200 border-[1px] px-2 py-3 flex-row justify-between items-center">
@@ -75,9 +76,13 @@ const Search = () => {
                     </Text>
                   </View>
                 </View>
-                <TouchableOpacity className="bg-white border-blue border-[1px] rounded-full px-4 py-1"
-                onPress={routetoProfile}>
-                  <Text className="text-blue text-[12px] font-pregular">View</Text>
+                <TouchableOpacity
+                  className="bg-white border-blue border-[1px] rounded-full px-4 py-1"
+                  onPress={() => routetoProfile(user.clerkId)}
+                >
+                  <Text className="text-blue text-[12px] font-pregular">
+                    View
+                  </Text>
                 </TouchableOpacity>
               </View>
             ))}

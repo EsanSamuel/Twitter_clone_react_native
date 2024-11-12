@@ -30,7 +30,7 @@ const Profile = () => {
   useEffect(() => {
     const getUserId = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/user/${userId}`
+        `http://192.168.43.199:3000/user/${userId}`
       );
       setUser(response.data);
     };
@@ -57,7 +57,7 @@ const Profile = () => {
       }
     }
     //const imageUri = form.image ? form.image.uri.replace("file://", "") : null;
-    await axios.patch(`http://192.168.43.200:3000/user/${userId}`, {
+    await axios.patch(`http://192.168.43.199:3000/user/${userId}`, {
       username: form.username,
       bio: form.bio,
       profileImage: base64Image,
@@ -77,7 +77,7 @@ const Profile = () => {
   useEffect(() => {
     const getUserPost = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/userpost/${user.id}`
+        `http://192.168.43.199:3000/userpost/${user.id}`
       );
       setPosts(response.data);
     };

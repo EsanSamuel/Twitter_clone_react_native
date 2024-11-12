@@ -10,6 +10,8 @@ import comment from "./routes/comment.route";
 import reply from "./routes/reply.route";
 import like from "./routes/like.route";
 import chat from "./routes/chat.route";
+import users from "./routes/users.route";
+import room from "./routes/room.route";
 
 const app = express();
 app.use(
@@ -39,6 +41,8 @@ app.use("/", comment);
 app.use("/", reply);
 app.use("/", like);
 app.use("/", chat);
+app.use("/", users);
+app.use("/", room);
 
 app.get("/", (req: express.Request, res: express.Response) => {
   res.send("Server is running!");

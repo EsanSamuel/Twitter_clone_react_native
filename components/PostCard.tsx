@@ -45,7 +45,7 @@ const PostCard = ({ item }: PostProps) => {
   useEffect(() => {
     const getComments = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/comment/${item.id}`
+        `http://192.168.43.199:3000/comment/${item.id}`
       );
       setComments(response.data);
     };
@@ -53,19 +53,19 @@ const PostCard = ({ item }: PostProps) => {
   }, [item.id]);
 
   const editPost = () => {
-    axios.patch(`http://192.168.43.200:3000/post/${item.id}`, {
+    axios.patch(`http://192.168.43.199:3000/post/${item.id}`, {
       content: form.content,
     });
   };
 
   const handleDelete = () => {
-    axios.delete(`http://192.168.43.200:3000/post/${item.id}`);
+    axios.delete(`http://192.168.43.199:3000/post/${item.id}`);
   };
 
   useEffect(() => {
     const getLikes = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/like/${item.id}`
+        `http://192.168.43.199:3000/like/${item.id}`
       );
       setLikes(response.data);
     };
@@ -79,7 +79,7 @@ const PostCard = ({ item }: PostProps) => {
 
   const handleLike = () => {
     try {
-      axios.post("http://192.168.43.200:3000/like", {
+      axios.post("http://192.168.43.199:3000/like", {
         userId: user.id,
         postId: item.id,
       });
@@ -90,7 +90,7 @@ const PostCard = ({ item }: PostProps) => {
 
   const handleUnLike = () => {
     try {
-      axios.delete(`http://192.168.43.200:3000/like/${user.id}`, {
+      axios.delete(`http://192.168.43.199:3000/like/${user.id}`, {
         data: { post_id: item.id },
       });
     } catch (error) {

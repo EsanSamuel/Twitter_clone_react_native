@@ -24,7 +24,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const getUserId = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/user/${userId}`
+        `http://192.168.43.199:3000/user/${userId}`
       );
       setUser(response.data);
       const username = response.data.username;

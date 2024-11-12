@@ -52,7 +52,7 @@ const SignUp = () => {
 
       if (completeSignUp.status === "complete") {
         try {
-          await axios.post("http://192.168.43.200:3000/auth/register", {
+          await axios.post("http://192.168.43.199:3000/auth/register", {
             username: form.username,
             email: form.email,
             clerkId: completeSignUp.createdUserId,

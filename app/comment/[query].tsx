@@ -38,7 +38,7 @@ const Comment = () => {
   useEffect(() => {
     const getUserId = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/user/${userId}`
+        `http://192.168.43.199:3000/user/${userId}`
       );
       setUser(response.data);
     };
@@ -48,7 +48,7 @@ const Comment = () => {
   useEffect(() => {
     const getPost = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/post/${query}`
+        `http://192.168.43.199:3000/post/${query}`
       );
       setPost(response.data);
     };
@@ -72,7 +72,7 @@ const Comment = () => {
           return;
         }
       }
-      axios.post("http://192.168.43.200:3000/comment", {
+      axios.post("http://192.168.43.199:3000/comment", {
         comment: form.comment,
         image: base64Image,
         post_id: query,
@@ -96,7 +96,7 @@ const Comment = () => {
   useEffect(() => {
     const getComments = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/comment/${query}`
+        `http://192.168.43.199:3000/comment/${query}`
       );
       setComments(response.data);
     };

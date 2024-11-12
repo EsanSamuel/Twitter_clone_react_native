@@ -22,15 +22,15 @@ const Profile = () => {
   const { query } = useLocalSearchParams();
   const [openModal, setOpenModal] = useState(false);
   const [posts, setPosts] = useState<any>([]);
-  const [user, setUser] = useState<any>("");
+  const [userprofile, setUserprofile] = useState<any>("");
   const { userId } = useAuth();
-  const { user: loggedInUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   useEffect(() => {
     const getUserId = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/user/${query}`
+        `http://192.168.43.199:3000/user/${query}`
       );
-      setUser(response.data);
+      setUserprofile(response.data);
     };
     getUserId();
   }, [query]);
@@ -38,18 +38,18 @@ const Profile = () => {
   useEffect(() => {
     const getUserPost = async () => {
       const response = await axios.get(
-        `http://192.168.43.200:3000/userpost/${user.id}`
+        `http://192.168.43.199:3000/userpost/${userprofile.id}`
       );
       setPosts(response.data);
     };
     getUserPost();
-  }, [user.id]);
+  }, [userprofile.id]);
 
   const handleChat = async () => {
     try {
-      const response = await axios.post("http://192.168.43.200:3000/chat", {
-        userId: loggedInUser.id,
-        otherUserId: user.id,
+      const response = await axios.post("http://192.168.43.199:3000/chat", {
+        userId: user.id,
+        otherUserId: userprofile.id,
       });
       console.log(response.data)
     } catch (error) {
@@ -92,15 +92,15 @@ const Profile = () => {
               style={{ gap: 7 }}
             >
               <Image
-                source={{ uri: user.profileImage }}
+                source={{ uri: userprofile.profileImage }}
                 className="w-20 h-20 rounded-full"
               />
               <Text className="font-pbold text-2xl text-gray-600">
-                {user.username}
+                {userprofile.username}
               </Text>
 
               <Text className="font-pmedium text-[13px] text-gray-600">
-                {user.bio}
+                {userprofile.bio}
               </Text>
               <View className="p-3">
                 <TouchableOpacity
