@@ -24,7 +24,7 @@ import * as FileSystem from "expo-file-system";
 const CreatePost = () => {
   const [form, setForm] = useState({
     content: "",
-    image: null,
+    image: [],
     tag: "",
   });
   const [user, setUser] = useState<any>("");
@@ -42,18 +42,24 @@ const CreatePost = () => {
   }, [userId]);
 
   const createPost = async () => {
-    let base64Image = "";
+    let base64Images: string[] = [];
 
-    if (form.image) {
-      try {
-        base64Image = await FileSystem.readAsStringAsync(form.image.uri, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-        base64Image = `data:image/jpeg;base64,${base64Image}`;
-      } catch (error) {
-        console.error("Error converting image to base64:", error);
-        Alert.alert("Error", "Failed to convert image.");
-        return;
+    //check if form.image is an array
+    if (Array.isArray(form.image)) {
+      for (const singleImage of form.image) {
+        try {
+          let base64Image = await FileSystem.readAsStringAsync(
+            singleImage.uri,
+            {
+              encoding: FileSystem.EncodingType.Base64,
+            }
+          );
+          base64Images.push(`data:image/jpeg;base64,${base64Image}`);
+        } catch (error) {
+          console.error("Error converting image to base64:", error);
+          Alert.alert("Error", "Failed to convert image.");
+          return;
+        }
       }
     }
     //const imageUri = form.image ? form.image.uri.replace("file://", "") : null;
@@ -61,17 +67,21 @@ const CreatePost = () => {
       user_id: userId,
       content: form.content,
       tag: form.tag,
-      image: base64Image,
+      image: base64Images,
     });
   };
 
   const openPicker = async () => {
     const result: DocumentPickerResult = await DocumentPicker.getDocumentAsync({
       type: "image/*",
+      multiple: true,
     });
 
     if (!result.canceled) {
-      setForm({ ...form, image: result.assets[0] });
+      setForm((prevState) => ({
+        ...prevState,
+        image: [...prevState.image, ...result.assets],
+      }));
     }
   };
   return (
@@ -89,14 +99,25 @@ const CreatePost = () => {
           </TouchableOpacity>
         </View>
         <View className="flex flex-row justify-between  gap-2 w-full pt-7">
-          <Image
-            source={{ uri: user.profileImage }}
-            className="w-8 h-8 rounded-full border-[1px] border-gray-400"
-            style={{
-              position: "absolute",
-              top: 18,
-            }}
-          />
+          {user.profileImage ? (
+            <Image
+              source={{ uri: user.profileImage }}
+              className="w-8 h-8 rounded-full border-[1px] border-gray-400"
+              style={{
+                position: "absolute",
+                top: 18,
+              }}
+            />
+          ) : (
+            <Image
+              source={require("../../assets/images/placeholder.png")}
+              className="w-8 h-8 rounded-full border-[1px] border-gray-400"
+              style={{
+                position: "absolute",
+                top: 18,
+              }}
+            />
+          )}
           <View className="pl-10 w-full">
             <TextInput
               className="flex-1 font-pbold text-gray-500 text-[14px] min-h-[70px] h-auto -top-4"
@@ -114,17 +135,19 @@ const CreatePost = () => {
           </View>
         </View>
 
-        {form.image && (
-          <Image
-            source={{ uri: form.image.uri }}
-            className="w-[100px] h-[70px] rounded-lg"
-            style={{
-              position: "absolute",
-              bottom: 3,
-              left: 2,
-            }}
-          />
-        )}
+        <View className="flex-1 justify-end">
+          <View className="flex-row flex-wrap gap-1">
+            {form?.image.map((image, index) => (
+              <View key={index} className="w-1/2 p-2 items-center">
+                <Image
+                  source={{ uri: image.uri }}
+                  className="w-24 h-16 rounded-lg"
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+
         <TouchableOpacity
           className="w-[60px] h-[60px] text-center  bg-blue rounded-full p-2 text-white items-center justify-center"
           activeOpacity={0.7}

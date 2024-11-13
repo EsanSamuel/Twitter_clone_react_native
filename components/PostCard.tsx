@@ -14,6 +14,9 @@ import ReactNativeModal from "react-native-modal";
 import Octicons from "@expo/vector-icons/Octicons";
 import FormField from "./FormField";
 import { UserContext } from "@/context/UserProvider";
+import Carousel from "react-native-reanimated-carousel";
+import Pagination from "react-native-reanimated-carousel";
+import { Dimensions } from "react-native";
 
 interface PostProps {
   item: Record<string, any>;
@@ -25,11 +28,14 @@ interface LikeProps {
   };
 }
 
+const { width: screenWidth } = Dimensions.get("window");
+
 const PostCard = ({ item }: PostProps) => {
   const { userId } = useAuth();
   const [comments, setComments] = useState<any>([]);
   const [modal, setModal] = useState<boolean>(false);
   const [editModal, setEditModal] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = React.useState(0);
   const [form, setForm] = useState({
     content: item.content,
   });
@@ -97,6 +103,12 @@ const PostCard = ({ item }: PostProps) => {
       console.log(error);
     }
   };
+  const images = [
+    "http://res.cloudinary.com/dirm0bwdw/image/upload/v1731455738/lf6bwe9obqmedsy4fkfn.jpg",
+    "http://res.cloudinary.com/dirm0bwdw/image/upload/v1731455742/n2k7lpfzbuv1c1qiuuxj.jpg",
+    "http://res.cloudinary.com/dirm0bwdw/image/upload/v1731455746/rp5rkk8oocpn6srktq84.jpg",
+    "http://res.cloudinary.com/dirm0bwdw/image/upload/v1731455753/ro7o14bv9blofbmkfnnd.jpg",
+  ];
 
   return (
     <View
@@ -147,12 +159,47 @@ const PostCard = ({ item }: PostProps) => {
           </Text>
         )}
 
-        {item.image !== null && item.image !== "" && (
-          <View className=" pt-5 h-auto">
-            <Image
-              source={{ uri: item.image! }}
-              className="w-full min-h-[200px]  rounded-lg object-contain"
+        {item.image && item.image.length > 0 && (
+          <View className="py-2 w-full">
+            <Carousel
+              width={screenWidth * 0.8}
+              height={200}
+              data={item.image}
+              renderItem={({ item }) => (
+                <View className="flex items-center justify-center">
+                  <Image
+                    source={{ uri: item as string }} // Assuming `item` is the image URL string
+                    className="w-full min-h-[200px] rounded-lg object-contain"
+                  />
+                </View>
+              )}
+              onProgressChange={(_, index) => setCurrentIndex(index)}
             />
+            <View
+              style={{
+                position: "absolute",
+                bottom: -10,
+                left: 0,
+                right: 0,
+                justifyContent: "center",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              {item.image.map((_: any, index: any) => (
+                <View
+                  key={index}
+                  style={{
+                    width: 5,
+                    height: 5,
+                    borderRadius: 5,
+                    marginHorizontal: 5,
+                    backgroundColor:
+                      index === currentIndex ? "#1da1f2" : "rgba(0, 0, 0, 0.3)",
+                  }}
+                />
+              ))}
+            </View>
           </View>
         )}
 

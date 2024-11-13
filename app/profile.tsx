@@ -37,7 +37,6 @@ const Profile = () => {
     getUserId();
   }, [userId]);
 
-
   const updateUser = async () => {
     let base64Image = null;
 
@@ -118,10 +117,17 @@ const Profile = () => {
               className="pt-10 -mt-20 px-3 flex-col pb-5 flex justify-between w-full"
               style={{ gap: 7 }}
             >
-              <Image
-                source={{ uri: user.profileImage }}
-                className="w-20 h-20 rounded-full"
-              />
+              {user.profileImage ? (
+                <Image
+                  source={{ uri: user.profileImage }}
+                  className="w-20 h-20 rounded-full"
+                />
+              ) : (
+                <Image
+                  source={require("../assets/images/placeholder.png")}
+                  className="w-20 h-20 rounded-full"
+                />
+              )}
               <Text className="font-pbold text-2xl text-gray-600">
                 {user.username}
               </Text>

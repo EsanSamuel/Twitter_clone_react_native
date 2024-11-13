@@ -24,10 +24,12 @@ export const createPost = async (
       },
     });
 
-    let ImageUrl = null;
-    if (image && image !== "") {
-      const uploadResult = await cloudinary.uploader.upload(image);
-      ImageUrl = uploadResult.url;
+    let ImageUrls = [];
+    if (image && image.length > 0) {
+      for (const singleImage of image) {
+        const uploadResult = await cloudinary.uploader.upload(singleImage);
+        ImageUrls.push(uploadResult.url);
+      }
     }
     const post = await prisma.post.create({
       data: {
@@ -37,7 +39,7 @@ export const createPost = async (
           },
         },
         content,
-        image: ImageUrl,
+        image: ImageUrls,
         tag,
       },
     });
@@ -55,10 +57,12 @@ export const getPosts = async (req: express.Request, res: express.Response) => {
       include: {
         user: true,
       },
+
       orderBy: {
         createdAt: "desc",
       },
     });
+    console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
     console.log(error);

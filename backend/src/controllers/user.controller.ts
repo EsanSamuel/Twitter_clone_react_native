@@ -43,8 +43,8 @@ export const getAllUsers = async (
 ) => {
   try {
     const userId = req.params.id;
+
     const users = await prisma.user.findMany({
-  
       include: {
         Post: true,
       },

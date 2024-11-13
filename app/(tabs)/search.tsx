@@ -2,7 +2,7 @@ import { useAuth } from "@clerk/clerk-expo";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { router } from "expo-router";
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
 import { Image, ScrollView, Text, View } from "react-native";
@@ -34,6 +34,13 @@ const Search = () => {
   const routetoProfile = (user: string) => {
     router.push(`/user-profile/${user}`);
   };
+
+  const AllUsers = useMemo(() => {
+    const userEmail = user.email;
+    const getUsers = users.filter((user) => user.email !== userEmail);
+    return getUsers;
+  }, [user.email, users]);
+
   return (
     <SafeAreaView className="bg-white min-h-[100%]">
       <ScrollView contentContainerStyle={{ height: "auto" }}>
@@ -60,13 +67,20 @@ const Search = () => {
             Users
           </Text>
           <View className="flex-col">
-            {users.map((user) => (
+            {AllUsers.map((user) => (
               <View className="border-gray-200 border-[1px] px-2 py-3 flex-row justify-between items-center">
                 <View className="flex-row gap-2 items-center">
-                  <Image
-                    source={{ uri: user.profileImage }}
-                    className="w-10 h-10 rounded-full border-[1px] border-gray-400"
-                  />
+                  {user.profileImage ? (
+                    <Image
+                      source={{ uri: user.profileImage }}
+                      className="w-10 h-10 rounded-full border-[1px] border-gray-400"
+                    />
+                  ) : (
+                    <Image
+                      source={require("../../assets/images/placeholder.png")}
+                      className="w-7 h-7 rounded-full border-[1px] border-gray-400"
+                    />
+                  )}
                   <View className="flex-col ">
                     <Text className="text-gray-600 font-pmedium">
                       {user.username}

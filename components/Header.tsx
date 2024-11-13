@@ -13,7 +13,7 @@ interface IHeader {
 const Header = ({ data }: IHeader) => {
   const otherUser = data && data.users ? useOtherUser(data) : null;
   return (
-    <View className="mt-10 px-1 flex-row gap-1 pt-10 border-b-[0.5px] border-gray-300 pb-2 items-center">
+    <View className="mt-10 px-1 flex-row gap-1 pt-10 border-b-[0.5px] border-gray-300 pb-2 items-center bg-white">
       <TouchableOpacity
         onPress={() => router.push("/chat")}
         

@@ -1,5 +1,13 @@
 import express from "express";
 import prisma from "../libs/prismadb";
+import { v2 as cloudinary } from "cloudinary";
+import { validateMessage } from "../libs/validation";
+
+cloudinary.config({
+  cloud_name: "dirm0bwdw",
+  api_key: "244737511899697",
+  api_secret: "LBf0Bay00WC4w1bonkdeapChUO4",
+});
 
 export const createRoom = async (
   req: express.Request,
@@ -72,6 +80,15 @@ export const getRooms = async (req: express.Request, res: express.Response) => {
       },
       include: {
         users: true,
+        messages: {
+          include: {
+            sender: true,
+            seen: true,
+          },
+        },
+      },
+      orderBy: {
+        lastMessagesAt: "desc",
       },
     });
     console.log(rooms);
@@ -109,12 +126,20 @@ export const createMessage = async (
   res: express.Response
 ) => {
   try {
-    const { message, roomId, userId } = req.body;
+    const validate = validateMessage.parse(req.body);
+    const { message, roomId, userId, image } = validate;
     console.log(req.body);
+
+    let ImageUrl = null;
+    if (image && image !== "") {
+      const uploadResult = await cloudinary.uploader.upload(image);
+      ImageUrl = uploadResult.url;
+    }
 
     const createmessage = await prisma.message.create({
       data: {
         message,
+        image: ImageUrl,
         room: {
           connect: {
             id: roomId,

@@ -8,39 +8,37 @@ import { ScrollView } from "react-native";
 import { router } from "expo-router";
 
 interface IProps {
-  data: any;
+  data: any & {
+    users: any[];
+    messages: any[];
+  };
 }
 
 const AllRoomBox = ({ data }: IProps) => {
   const { user } = useContext(UserContext);
   const otherUser = useOtherUser(data);
-  const lastMessages = data.messages || [];
 
   const handleClick = () => {
     router.push(`/Messages/${data.id}`);
   };
 
   return (
-    <SafeAreaView className="bg-white min-h-[100%] pt-[-10]">
-      <ScrollView contentContainerStyle={{ height: "auto" }}>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          className="flex-row gap-4 items-center flex  px-3"
-          onPress={handleClick}
-        >
-          <Image
-            source={{ uri: otherUser.profileImage! }}
-            className="w-14 h-14 rounded-full border-[1px] border-[#6B7280]"
-          />
-          <View className="flex-col">
-            <Text className="font-pmedium">{otherUser.username}</Text>
-            <Text className="font-plight text-[12px]">
-              Hello, how're you doing?
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      className="flex-row gap-4 items-center flex  px-3 py-3"
+      onPress={handleClick}
+    >
+      <Image
+        source={{ uri: otherUser.profileImage! }}
+        className="w-10 h-10 rounded-full border-[1px] border-[#6B7280]"
+      />
+      <View className="flex-col">
+        <Text className="font-pmedium text-gray-600">{otherUser.username}</Text>
+        <Text className="font-plight text-[11px]">
+          Started a conversation with {otherUser.username}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 

@@ -68,15 +68,27 @@ const home = () => {
             <View className="w-full flex flex-row justify-between items-center">
               <FontAwesome6 name="grip-lines" size={24} color="#6B7280" />
               <AntDesign name="twitter" size={25} color="#1DA1F2" />
-              <TouchableOpacity
-                onPress={() => router.push("/profile")}
-                activeOpacity={0.7}
-              >
-                <Image
-                  source={{ uri: user.profileImage }}
-                  className="w-7 h-7 rounded-full border-[1px] border-gray-400"
-                />
-              </TouchableOpacity>
+              {user.profileImage ? (
+                <TouchableOpacity
+                  onPress={() => router.push("/profile")}
+                  activeOpacity={0.7}
+                >
+                  <Image
+                    source={{ uri: user.profileImage }}
+                    className="w-7 h-7 rounded-full border-[1px] border-gray-400"
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => router.push("/profile")}
+                  activeOpacity={0.7}
+                >
+                  <Image
+                    source={require("../../assets/images/placeholder.png")}
+                    className="w-7 h-7 rounded-full border-[1px] border-gray-400"
+                  />
+                </TouchableOpacity>
+              )}
             </View>
             <Text className="font-pbold pt-5 text-2xl text-gray-600 pb-2">
               See what's new!

@@ -11,7 +11,7 @@ export type createUserType = z.infer<typeof validateUser>;
 export const validatePost = z.object({
   user_id: z.string().min(1),
   content: z.string().min(1),
-  image: z.string().nullable().optional(),
+  image: z.array(z.string()).nullable().optional(),
   tag: z.string().optional(),
 });
 
@@ -42,3 +42,12 @@ export const validateReply = z.object({
 });
 
 export type createReplyType = z.infer<typeof validateReply>;
+
+export const validateMessage = z.object({
+  userId: z.string().min(1),
+  roomId: z.string().min(1),
+  message: z.string().optional(),
+  image: z.string().nullable().optional(),
+});
+
+export type createMessageType = z.infer<typeof validateMessage>;

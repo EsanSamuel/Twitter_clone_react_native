@@ -25,6 +25,7 @@ const Profile = () => {
   const [userprofile, setUserprofile] = useState<any>("");
   const { userId } = useAuth();
   const { user } = useContext(UserContext);
+  const [chats, setChats] = useState([]);
   useEffect(() => {
     const getUserId = async () => {
       const response = await axios.get(
@@ -51,7 +52,8 @@ const Profile = () => {
         userId: user.id,
         otherUserId: userprofile.id,
       });
-      console.log(response.data)
+      router.push(`/chat`);
+      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -106,7 +108,7 @@ const Profile = () => {
                 <TouchableOpacity
                   className="w-full  border-[1px] border-blue rounded-full p-2 px-4
                  text-blue flex-row  justify-center items-center"
-                 onPress={handleChat}
+                  onPress={handleChat}
                 >
                   <Feather name="mail" size={24} color="#1da1f2" />
                   <Text className="text-blue text-center text-[13px] font-psemibold ml-4">
